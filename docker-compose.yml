@@ -1,0 +1,30 @@
+services:
+  db:
+    image: mongo:latest
+    container_name: db
+    restart: always
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - app-network
+
+  app:
+    build: .
+    container_name: app
+    restart: always
+    ports:
+      - "80:5000"
+    environment:
+      - MONGO_URI=mongodb://db:27017/devops_assignment
+      - PORT=5000
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+volumes:
+  mongo_data:
+
+networks:
+  app-network:
+    driver: bridge
